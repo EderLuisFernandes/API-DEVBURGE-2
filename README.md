@@ -119,3 +119,15 @@ export default authMiddleware;
         models.map((model) => model.init(this.connection)).map(model => model.associate && model.associate(this.connection.models),);
 
  - tIVE UQ MUDAR A PORTA PARA 3002
+ # APROVEITEI QUE ESTAVA AQUI FIZ  ALTERAÇÃO DO CONTROLLER PARA  ELE MOSTRAR CATEGORY: ID E NOME
+ - [ X] MUDAMOS O NOME QUE TA CATEGORY PARA CATEGORY_ID 
+    const products = await Product.findAll({
+    include: [
+      {
+        model: Category,
+        as:   'category',
+        attributes: ['id','name']
+      
+      }
+    ]
+  })
