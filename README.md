@@ -82,3 +82,40 @@ export default authMiddleware;
  - [x] yarn sequelize db:migrate 
  AGORA VAMOS CRIAR A MODEL E O CONROLLER DA CATEGORIES DEPOIS DE ALTENTICADO E FEITO VAMO NO DATABASE QUE NÃO PODE FALTA PRA REGISTRAR UMA MODEL NOVA DEPOIS VAMO NA ROUTAS E COLOCA-MOS O QUE QUEREMOS VER...
   -[X] Para saber se a categoria ja exixte ou se vai criar uma nova e desetruturei pra não mostra dia e hora que foi criado....
+
+  ### VAMOS CRIAR E EXLUIR CAMPO DE UMA TABELA A FOMASSA COLUNAS... PARATABELAS DE RELACIONAMENTOS 
+
+  - [] VAMOS CRIA UM RELACIONAMENTO FK
+  ###  NAS MIGRATION QUANDO ELAS SÃO CRIADAS ELA NÃO PODE SER MUDADA TODA VEZ QUE QUISER FAZER ALTERAÇÃO NO BANCO VAMOS CRIAR UMA NOVA....
+  - [x] yarn sequelize migration:create --name remove-categories-column
+  # ai quando a migrate e criada vamos colocar  umremovecolumn e dentro ( //nome da tabela , //coluna que eu quero exluir).... ↓
+   - [x] await queryInterface.removeColumn('products','category');
+   # DEPOIS DE REMOVIDO A COLUNA VAMOS ADICIONAR AGOR AUMA COM CHAVAE ESTRNAGEIRA.
+    await queryInterface.addColumn('products', 'category_id',{
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'categories',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+      allowNull: true,
+    });
+      
+      ## VAMOS LA O CODIGO ACIMA ESTA DIZENDO QUE VA NA TABELA PRODUTOS E CRIA UMA COLUNA CATEGORI_ID ONDE VAI SER DOI TIPO INTEIRO E VAI SE REFERENCIA A UMA TABELA DE CATEGORIES COM O ID SE SE ONUPDATE TIVER ALGUMA ALTERAÇÃO ENTAO VOCE MUDA NOS DOIS ...
+
+      # VAMOS AVISAR PARA NOSSA MODEL QUE TEVE ALTERAÇAÕE PRECISAMOS JUNTAR ESSE CODIGO..
+      - [x] vVAMOS EM PRODUTOS E CRIAMOS UM METODO STATIC COM O NOME ASSOCIEATE
+      ## sendo que qua dentro dele damos um this.belongsto para dizer que vai pega vario produtos dentro da models referenciamso ele como chave estrangeira e dizxemos que semrpe motro como category
+      - [ ]  static associate(models){
+        this.belongsTo(models.Category,{
+            foreignKey: 'category_id',
+            as: 'category'
+        })
+
+    }
+    - DEPOIS QUE ASSOIE VOU TER QUE IR NO INDEX DIZER PARA ELE O QUE VAMOS FAZER SE UM FOR VERDADEIRO ↓
+    this.connection = new Sequelize(configDatabase);
+        models.map((model) => model.init(this.connection)).map(model => model.associate && model.associate(this.connection.models),);
+
+ - tIVE UQ MUDAR A PORTA PARA 3002
