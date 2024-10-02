@@ -1,5 +1,6 @@
 import * as Yup from "yup"
 import Category from "../models/Category";
+import { where } from "sequelize";
 
 
 class CategoryController{
@@ -18,12 +19,19 @@ class CategoryController{
   }
 
 
-  const { name} = request.body
-
-  const category = await Category.create({
+  const { name} = request.body;
+  const categoryExist =await Category.findOne({
+    where: {
+      name,
+    }
+  })
+   if(categoryExist){
+    return response.status(400).json({error: 'Categoria ja Existe'})
+   }
+  const {id} = await Category.create({
     name,
   })
-  return response.status(201).json(category)
+  return response.status(201).json({id , name})
  }
  async index(request,response){
   const category = await Category.findAll()
