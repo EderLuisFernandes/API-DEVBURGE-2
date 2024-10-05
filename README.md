@@ -240,5 +240,42 @@ const formattedProducts = findProducts.map((product) =>{
     category: product.category.name,
     price: product.price,
     url: product.url,
-    quantity: products[productIndex],
+    quantity: products[productIndex].quantity,
   };
+### Gravando pedido no mongo
+ - [x] const  createdOrder = await Order.create(order) so adiciona ele na variavel order que eu crie para mostrar user e produtos // statuse agora ele  ta gravando no banco de dados....
+   const order = {
+    user:{
+        id: request.userId,
+        name: request.userName,
+    },
+    products: formattedProducts,
+    status: 'Pedido Realizado',
+  };
+  const  createdOrder = await Order.create(order)
+  return response.status(201).json(createdOrder)
+}
+###  CRINADO STATUS VAMOS LISTA OS PRODUTOS E MOSTRAR STATUS 
+- [X] CRIANDO NA ORDER O ASYNC INDEX....
+- [X] CRIANDO ROTA PAR AO MESMO
+## atualizando pedidos o famoso status ....
+dentro de Order vamos criar um 
+- [x] async update dentro dele vamosa dicionar uns codigos ↓
+- const Schema = Yup.object({
+    status: Yup.string().required(),
+  });
+  try{
+    Schema.validateSync(request.body,{abortEarly:false})
+  }catch(err){
+    return response.status(400).json({ error: err.errors})
+  }
+  const {id} = request.params;
+  const {status} = request.body;
+try{
+await Order.updateOne({_id: id},{status});
+}catch(err){
+ return response.json({error: 'Pedido não encontrado'})
+}
+  
+  return response.json({message:'Status atualizado com Sucesso!'})
+}
