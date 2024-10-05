@@ -131,3 +131,114 @@ export default authMiddleware;
       }
     ]
   })
+  ## CRIANDO CONEXÃO COM MONGODB
+   - VAMOS CRIA UM CONTAINER DO DOCKER... NA PORTA PADRAO DELE 27017 O SEQUELIZE NÃO INTENDE MONGODB
+   - [X] docker run --name devburger-mongo -p 27017:27017 -d -t mongo
+## COMISSO VAMOS INTALAR O MONGOOSE
+ -[x] yarn add mongoose
+ sendo que fui direto no index.js 
+ e no controctor colocaquie o this.mongo();
+ e logo emseguida coloquei 
+  - [x] mongo(){this.mongoConnection = mongoose.connect('mongodb://localhost:27017/devburger');
+    }
+
+- [x] como vamos fazer isso pelo mongo não precisamos criar uma migratrion... é chamado de schemafree
+
+- [x] vamos criar uma pasta como nome  schemas quem vem com order.js vai ser com o schema ↓
+ -  import mongoose from "mongoose";
+
+
+const OderSchema = new mongoose.Schema({
+    user:{
+        id:{
+            type: String,
+            required: true,
+        },
+        name:{
+            type: String,
+            required:true,
+        }
+    },
+    products:[
+        {
+            id:{
+                type: Number,
+                required: true,
+            },
+            name:{
+               type: String,
+               required:true, 
+            },
+            price:{
+                type: Number,
+                required: true,
+            },
+            category:{
+                type: String,
+                required: true,
+            },
+            url: {
+         type :String,
+         required:true,
+            },
+            quantity:{
+                type: String,
+                required: true
+            }
+        }
+    ],
+    status :{
+        type: String,
+        required: true,
+    }
+},{
+    timestamps: true,
+})
+
+export default mongoose.model('Order', OderSchema);
+
+## DEPOSI VAMOS CRIAR O CONTROLLER mas antes fizemso alguams alteraçoes no controller sesion 
+- [x] no tokem foi adicionamdo  name: user.name
+- [x] depois no auth do middleware vamoa adicionar o request.userName= dedoded.name
+
+## AGORA VAMOS BUSCAR DADOS NO BANCO....
+-[] const findProducts = await Product.findAll({
+    where:{
+      id: productsIds,
+    }
+  })
+
+## desse jeito conseguimos pegar o que esta no banco porem precimaso de alguns codigos auxiliares sendo assim o codiog consegue criar um novo array com o map e mostrar os produtos com findall 
+ - [1]  const productsIds = products.map((product) =>product.id)
+ - [2] const order = {
+    user:{
+        id: request.userId,
+        name: request.userName,
+    },
+    products: findProducts,
+  }
+  return response.status(201).json(order)
+
+
+### TIVEMOS QUE PUXAR EM ORDEM  OS PRODUTOS...
+    const formattedProducts = findProducts.map((product) =>{
+  const newProduct = {
+    id: product.id,
+    name: product.name,
+    category: product.category.name,
+    price: product.price,
+    url: product.url,
+  };
+  return newProduct
+})
+### VAMOS PUXAR O QUANTIDADE DE FORMA  QUE ELE VENHA SER VISTO  PORQUE ELE TEM NO BANO POREM SO VAI SER MOSTRADO QUANDO A PESSO PASSR O VALOR DE QUANTIDADE MAS PARA ISSO VAMOS VERIFICAR SE O ID ESTA CERTO SE FOR CERTO ENTAO NO ID 1 ADD A QUANTIDADE... ↓
+const formattedProducts = findProducts.map((product) =>{
+  const productIndex = products.findIndex((item) => item.id === product.id)
+  const newProduct = {
+    id: product.id,
+    name: product.name,
+    category: product.category.name,
+    price: product.price,
+    url: product.url,
+    quantity: products[productIndex],
+  };

@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 import Category from "../models/Category";
-import { where } from "sequelize";
+
 
 
 class CategoryController{
