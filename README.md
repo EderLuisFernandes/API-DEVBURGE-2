@@ -303,3 +303,69 @@ module.exports = {
     
   }
 };
+### Vamos atualizar os Produtos ter essa opçãod e atualizar os Produtos..
+- [x] request.params
+- [x] fizemos uma verifica no primary key
+- [x] depois uma verificação caso não seja 
+## vamso desestruturar jo path que é as imagens porque vai ser opcional porque ela no momento esta sendo obrigatoria e vamos deixar ele opional 
+# ANTES
+
+const {filename: path} = request.file
+# DEPOIS
+let path;
+  if(request.file){
+    path = request.file.filename
+  }
+
+### VAMOS PASSA UM SEGUNDO PARAMETRO DO UPDATE PORQUE EÉ PRECISO...
+
+async update(request, response){
+  const Schema = Yup.object({
+    name: Yup.string(),
+    price: Yup.number(),
+    category_id: Yup.number(),
+    offer: Yup.boolean(),
+  });
+ 
+  
+
+  try{
+    Schema.validateSync(request.body,{abortEarly:false})
+  }catch(err){
+    return response.status(400).json({ error: err.errors})
+  }
+
+  const  { admin: isAdmin} = await User.findByPk(request.userId)
+  if(!isAdmin){
+    return response.status(401).json({message: "Voce não é administrador"})
+  }
+
+   const {id} = request.params
+
+   const findProduct = await Product.findByPk(id)
+
+
+   if(!findProduct){
+    return response.status(401).json({error: 'Seu id do produtos esta incorreto'})
+  } 
+  
+  let path;
+  if(request.file){
+    path = request.file.filename
+  }
+  
+  const { name, price , category_id, offer} = request.body
+
+  await Product.update({
+    name,
+    price,
+    category_id,
+    path,
+    offer,
+  },{
+    where:{
+      id
+    }
+  })
+  return response.status(200).json()
+ }
