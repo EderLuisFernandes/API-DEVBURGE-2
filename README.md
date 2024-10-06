@@ -279,3 +279,27 @@ await Order.updateOne({_id: id},{status});
   
   return response.json({message:'Status atualizado com Sucesso!'})
 }
+#### validando ADMIN........ para validar vamso na order produtos e categori onde vamos so fazer a verificaçãos e é admin ou não..
+- [ x] const  { admin: isAdmin} = await User.findByPk(request.userId)
+  if(!isAdmin){
+    return response.status(401).json({message: "Voce não é administrador"})
+  }
+  ## depois criamos o offer para  ofertas ...
+   - [x]'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.addColumn('products', 'offer',{
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    });
+     
+  },
+
+  async down (queryInterface) {
+   await queryInterface.removeColumn('products', 'offer');
+    
+  }
+};
