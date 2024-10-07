@@ -344,7 +344,7 @@ async update(request, response){
 
    const findProduct = await Product.findByPk(id)
 
-
+## atualização do produtos
    if(!findProduct){
     return response.status(401).json({error: 'Seu id do produtos esta incorreto'})
   } 
@@ -369,3 +369,34 @@ async update(request, response){
   })
   return response.status(200).json()
  }
+
+## atualização do categoria.....
+vamos alterar as models .... adicionando O
+- [x] path ..
+- [x] url com category
+super.init({
+            name:Sequelize.STRING,
+            path: Sequelize.STRING,
+            url:{
+                type: Sequelize.VIRTUAL,
+                get(){
+                    return `http://localhost:3001/category-file/${this.path}`
+                }
+            }
+        },
+## VAMOS PARA O CONTROLER AJUSTA QUIE ELE RECEBA O PATH
+- [X]  const {filename: path} = request.file
+E ADD NO CREATE 
+### DEPOIS VAMOS NAS ROTAS PARA ADICIONAR O CAMINO
+- [X]routes.post ('/categories',upload.single('file'), CategoryController.store); 
+### E VAMOS NO APP NAS MIDDLEWARE PARA DIZER ONDE VAI GUARDA AS FOTOS
+- [X] this.app.use('/category-file',express.static(resolve(__dirname, '..', 'uploads')))
+
+VAMOS CRIAR O UPDATE..
+Vamso na MIDDLEWARE CRIAR U ASSYNC UPDATE ONDE VAMOS FAZER ALGUMAS VERIFICAÇOES COMO ↓
+- [] ID  NO PARAMS
+- [] VER SE EXISTE CATEGORIA COM PUXANOD O ID COM FINDBYPK
+- [] USANDO O PATH COMO OPICIONAL..
+- [] E SIM PASSA RTUDO AI ELE ATUALIZA PUXANOD DO ID
+fazendo alguns tratamente 
+# FINALIZADO...😎
