@@ -9,9 +9,6 @@ class CategoryController{
     name: Yup.string().required(),
     
   });
- 
-  
-
   try{
     Schema.validateSync(request.body,{abortEarly:false})
   }catch(err){
@@ -73,7 +70,7 @@ class CategoryController{
  if(name){
   const categoryNameExist =await Category.findOne({
     where: {
-      name,
+      name, 
     }
   })
   if(categoryNameExist && categoryNameExist.id !== +id){
